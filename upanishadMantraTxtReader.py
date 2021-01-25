@@ -27,14 +27,14 @@ class UpanishadMantras():
             if mantraIndex in finalCleanMantras:
                 split = finalCleanMantras.split(mantraIndex)
                 mantraDict[mantraIndex] = split[0]
-                mantraDictNumericIndex[count]=split[0]
+                mantraDictNumericIndex[count]=split[0]+" "+mantraIndex
                 finalCleanMantras = split[1]
                 count+=1
 
         return mantraDictNumericIndex
 
 if __name__ == "__main__":
-    reader = UpanishadMantras("Ishopanishat_Sanskrit.txt")
+    reader = UpanishadMantras("MantrikaUpanishat_Sanskrit.txt")
     upanishadMantraFull = reader.readRawMantrasFromTxt()
     finalCleanMantras = reader.cleanUpMantra(upanishadMantraFull)
     mantraDict = reader.splitMantrasToIndex(finalCleanMantras)

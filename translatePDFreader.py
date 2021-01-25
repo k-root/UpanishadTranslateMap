@@ -26,14 +26,22 @@ class Meanings():
         print(mantraTranslations)
         firstOccurance = indexList.index(previousIndex)
         indexListModified = indexList[firstOccurance+1:]
+
         for currentIndex in indexListModified:
             print("CURRENT INDEX1 :",currentIndex)
             if currentIndex in mantraTranslations:
                 print("--CURRENT INDEX2--",currentIndex)
                 split = mantraTranslations.split(currentIndex,1)
-                bhavamDict[count] = split[0]
+                currentExtract=split[0].replace(previousIndex,"")
+                translate = ""
+                for line in currentExtract.split(". "):
+                    if "www.celextel.org" in line:
+                        print("VagueLINE: ", line)
+                    else:
+                        translate+=line.replace("\n"," ")+"\n"
+                bhavamDict[count] = translate
                 mantraTranslations = split[1]
-                print("FINAL MANTRA TRANSLATION: ", mantraTranslations)
+                # print("FINAL MANTRA TRANSLATION: ", mantraTranslations)
             else:
                 print(currentIndex, "Not in ", mantraTranslations)
             previousIndex = currentIndex
@@ -43,9 +51,20 @@ class Meanings():
             if "Om! Peace! Peace! Peace!" not in finalLines:
                 print("FINAL LINES: ", finalLines)
                 lastMantra+=finalLines+"\n"
-            end = "Om! Peace! Peace! Peace!\n"+mantraTranslations.split("Om! Peace! Peace! Peace!")[1]
+            try:
+                end = "Om! Peace! Peace! Peace!\n"+mantraTranslations.split("Om! Peace! Peace! Peace!")[1]
+            except Exception as e:
+                if "Om! That (Brahman) is infinite, and this (universe) is infinite." in mantraTranslations:
+                    end = "Om! That (Brahman) is infinite, and this (universe) is infinite."+mantraTranslations.split("Om! That (Brahman) is infinite, and this (universe) is infinite.")[1]
+                else:
+                    end = ""
+                print("WARNING IN LAST MANTRA/END:", e)
+                print("END:")
+
+
         bhavamDict[count]=lastMantra
-        bhavamDict["end"] = end
+        if len(end)>1:
+            bhavamDict["end"] = end
         return bhavamDict
     def getTextFromPDF(self):
         output_string = StringIO()
@@ -60,7 +79,8 @@ class Meanings():
         return output_string.getvalue()
 
 if __name__ == "__main__":
-    englishFilePath="Ishopanishat_English.pdf"
+    englishFilePath="Adhyatma Upanishad.pdf"
     englishMeanings = Meanings(englishFilePath)
     englishTranslationFull = englishMeanings.getTextFromPDF()
     bhavamDict = englishMeanings.splitPoints(englishTranslationFull)
+    print(bhavamDict)
